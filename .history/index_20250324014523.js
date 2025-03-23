@@ -1,20 +1,5 @@
 // myEach: Iterates over a collection (array or object) and calls the callback function
-function myEach(collection, callback) {
-    // Check if collection is an array
-    if (Array.isArray(collection)) {
-      for (let i = 0; i < collection.length; i++) {
-        callback(collection[i], i, collection);
-      }
-    } else {
-      // If it's an object, iterate over the object keys
-      for (let key in collection) {
-        if (collection.hasOwnProperty(key)) {
-          callback(collection[key], key, collection);
-        }
-      }
-    }
-    return collection; // Ensure the collection is returned
-  }
+
   
   // myMap: Creates a new array with the results of calling a provided function on every element in the collection
   function myMap(collection, callback) {
@@ -27,43 +12,13 @@ function myEach(collection, callback) {
   
   // myReduce: Reduces a collection to a single value by applying a function to each element
   function myReduce(collection, callback, initialValue) {
-    let accumulator;
-    let startIndex;
-
-    // Handle the case where an initialValue is provided
-    if (initialValue !== undefined) {
-      accumulator = initialValue;
-      startIndex = 0;
-    } else {
-      // For objects and arrays, initialize the accumulator from the first value
-      if (Array.isArray(collection)) {
-        accumulator = collection[0];
-        startIndex = 1;
-      } else {
-        // Objects need to find the first property
-        const keys = Object.keys(collection);
-        if (keys.length > 0) {
-          accumulator = collection[keys[0]];
-          startIndex = 1;
-        }
-      }
+    let accumulator = initialValue !== undefined ? initialValue : collection[0];
+    let startIndex = initialValue !== undefined ? 0 : 1;
+  
+    for (let i = startIndex; i < collection.length; i++) {
+      accumulator = callback(accumulator, collection[i], i, collection);
     }
-
-    // Handle arrays
-    if (Array.isArray(collection)) {
-      for (let i = startIndex; i < collection.length; i++) {
-        accumulator = callback(accumulator, collection[i], i, collection);
-      }
-    } else {
-      // Handle objects
-      const keys = Object.keys(collection);
-      for (let i = startIndex; i < keys.length; i++) {
-        const key = keys[i];
-        accumulator = callback(accumulator, collection[key], key, collection);
-      }
-    }
-
-    return accumulator; // Return the final reduced value
+    return accumulator;
   }
   
   // myFind: Returns the first element in the collection that satisfies the provided testing function
@@ -136,3 +91,4 @@ function myEach(collection, callback) {
     myKeys,
     myValues,
   };
+  

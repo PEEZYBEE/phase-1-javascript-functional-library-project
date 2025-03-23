@@ -29,7 +29,7 @@ function myEach(collection, callback) {
   function myReduce(collection, callback, initialValue) {
     let accumulator;
     let startIndex;
-
+  
     // Handle the case where an initialValue is provided
     if (initialValue !== undefined) {
       accumulator = initialValue;
@@ -40,15 +40,16 @@ function myEach(collection, callback) {
         accumulator = collection[0];
         startIndex = 1;
       } else {
-        // Objects need to find the first property
-        const keys = Object.keys(collection);
-        if (keys.length > 0) {
-          accumulator = collection[keys[0]];
-          startIndex = 1;
+        for (let key in collection) {
+          if (collection.hasOwnProperty(key)) {
+            accumulator = collection[key];
+            startIndex = 1;
+            break; // Exit after finding the first key-value pair
+          }
         }
       }
     }
-
+  
     // Handle arrays
     if (Array.isArray(collection)) {
       for (let i = startIndex; i < collection.length; i++) {
@@ -56,13 +57,13 @@ function myEach(collection, callback) {
       }
     } else {
       // Handle objects
-      const keys = Object.keys(collection);
-      for (let i = startIndex; i < keys.length; i++) {
-        const key = keys[i];
-        accumulator = callback(accumulator, collection[key], key, collection);
+      for (let key in collection) {
+        if (collection.hasOwnProperty(key)) {
+          accumulator = callback(accumulator, collection[key], key, collection);
+        }
       }
     }
-
+  
     return accumulator; // Return the final reduced value
   }
   
@@ -136,3 +137,4 @@ function myEach(collection, callback) {
     myKeys,
     myValues,
   };
+  
